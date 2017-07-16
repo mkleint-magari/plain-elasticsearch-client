@@ -47,22 +47,76 @@ class Client
         $url = $this->buildSocket();
 
         if (strlen($index)) {
-            $url .= '/' .$index;
+            $url .= '/' . $index;
         }
 
         if (strlen($type)) {
-            $url .= '/' .$type;
+            $url .= '/' . $type;
         }
 
         $url .= '/_search';
 
-
-
-        exec('curl --silent "'.$url.'" -d "'.$query.'"', $output, $returnVal);
+        exec('curl --silent "' . $url . '" -d \'' . $query . '\'', $output, $returnVal);
 
         return implode(PHP_EOL, $output);
     }
 
+    /**
+     * returns elasticsearch response as plain string
+     *
+     * @param string $query
+     * @param string $index index- or aliasname
+     * @param string $scrollDuration
+     * @param string $type  (optional
+     *
+     * @return string
+     */
+    public function initiateScan($query, $index, $scrollDuration = '1m', $type = '')
+    {
+        $url = $this->buildSocket();
+
+        if (strlen($index)) {
+            $url .= '/' . $index;
+        }
+
+        if (strlen($type)) {
+            $url .= '/' . $type;
+        }
+
+        $url .= '/_search?scroll=' . $scrollDuration;
+
+        exec('curl --silent "' . $url . '" -d \'' . $query . '\'', $output, $returnVal);
+
+        return implode(PHP_EOL, $output);
+    }
+
+    /**
+     * @param string $scrollId
+     * @param string $scrollDuration
+     *
+     * @return string
+     */
+    public function scan($scrollId, $scrollDuration = '1m')
+    {
+        $url = $this->buildSocket() . '/_search/scroll';
+
+        $query = <<<JSON
+{
+    "scroll": "{$scrollDuration}",
+    "scroll_id": "{$scrollId}"
+}
+JSON;
+
+        exec('curl --silent "' . $url . '" -d \'' . $query . '\'', $output, $returnVal);
+
+
+
+        return implode(PHP_EOL, $output);
+    }
+
+    /**
+     * @return string
+     */
     private function buildSocket()
     {
         return $this->host . ':' . $this->port;
