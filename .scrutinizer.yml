@@ -5,7 +5,7 @@ build:
     tests:
         override:
             -
-                command: vendor/bin/phpunit -c phpunit.xml --coverage-clover=my-coverage-file
+                command: sleep 2 && vendor/bin/phpunit -c phpunit.xml --coverage-clover=my-coverage-file
                 coverage:
                     file: my-coverage-file
                     format: php-clover
