@@ -12,13 +12,39 @@ class Client
 {
 
     /**
+     * @var string
+     */
+    private $host = 'localhost';
+
+    /**
+     * @var
+     */
+    private $port = 9200;
+
+    /**
+     * Client constructor.
+     *
+     * @param string $host
+     * @param int    $port
+     */
+    public function __construct($host = '127.0.0.1', $port = 9200)
+    {
+        $this->host = $host;
+        $this->port = $port;
+    }
+
+    /**
+     * returns elasticsearch response as plain string
+     *
      * @param string $query
      * @param string $index index- or aliasname
-     * @param string $type (optional
+     * @param string $type  (optional
+     *
+     * @return string
      */
     public function search($query, $index, $type = '')
     {
-        $url = 'localhost:9200';
+        $url = $this->buildSocket();
 
         if (strlen($index)) {
             $url .= '/' .$index;
@@ -35,5 +61,10 @@ class Client
         exec('curl --silent "'.$url.'" -d "'.$query.'"', $output, $returnVal);
 
         return implode(PHP_EOL, $output);
+    }
+
+    private function buildSocket()
+    {
+        return $this->host . ':' . $this->port;
     }
 }
