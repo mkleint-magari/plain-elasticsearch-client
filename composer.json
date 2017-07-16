@@ -1,5 +1,5 @@
 {
-    "name": "magari/plain-elasticsearch-client",
+    "name": "mkleint-magari/plain-elasticsearch-client",
     "description": "a simple php elasticsearch client with focus on performance",
     "minimum-stability": "stable",
     "license": "proprietary",
@@ -8,5 +8,19 @@
             "name": "Markus Kleint",
             "email": "markus.kleint@magari-internet.de"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "PlainEsClient\\": "PlainEsClient/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PlainEsClient\\Tests\\Functional\\": "tests/Functional",
+            "PlainEsClient\\Tests\\Unit\\": "tests/Unit"
+        }
+    }
 }
