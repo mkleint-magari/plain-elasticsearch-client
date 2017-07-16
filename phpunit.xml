@@ -19,7 +19,7 @@
 
     <filter>
         <whitelist>
-            <directory>.</directory>
+            <directory>PlainEsClient</directory>
             <exclude>
                 <directory>tests</directory>
                 <file>./bootstrap.php</file>
