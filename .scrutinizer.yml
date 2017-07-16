@@ -27,6 +27,14 @@ build:
             environment:
                 php: 7.1
                 elasticsearch: 1
+        php54_es2:
+            environment:
+                php: 5.4
+                elasticsearch: 2
+        php54_es5:
+            environment:
+                php: 5.4
+                elasticsearch: 5
 
 filter:
     excluded_paths:
