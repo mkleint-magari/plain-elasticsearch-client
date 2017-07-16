@@ -10,7 +10,6 @@
         }
     ],
     "require-dev": {
-        "phpunit/phpunit": "^6.2"
     },
     "autoload": {
         "psr-4": {
@@ -22,5 +21,8 @@
             "PlainEsClient\\Tests\\Functional\\": "tests/Functional",
             "PlainEsClient\\Tests\\Unit\\": "tests/Unit"
         }
+    },
+    "require": {
+        "phpunit/phpunit": "~5"
     }
 }
