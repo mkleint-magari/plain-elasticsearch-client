@@ -1,0 +1,12 @@
+{
+    "name": "magari/plain-elasticsearch-client",
+    "description": "a simple php elasticsearch client with focus on performance",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Markus Kleint",
+            "email": "markus.kleint@magari-internet.de"
+        }
+    ]
+}
