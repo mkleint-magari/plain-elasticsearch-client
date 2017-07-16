@@ -98,18 +98,9 @@ class Client
      */
     public function scan($scrollId, $scrollDuration = '1m')
     {
-        $url = $this->buildSocket() . '/_search/scroll';
+        $url = $this->buildSocket() . '/_search/scroll?scroll=' . $scrollDuration;
 
-        $query = <<<JSON
-{
-    "scroll": "{$scrollDuration}",
-    "scroll_id": "{$scrollId}"
-}
-JSON;
-
-        exec('curl --silent "' . $url . '" -d \'' . $query . '\'', $output, $returnVal);
-
-echo 'executing request with data ' . $query . PHP_EOL;
+        exec('curl --silent "' . $url . '" -d \'' . $scrollId . '\'', $output, $returnVal);
 
         return implode(PHP_EOL, $output);
     }
