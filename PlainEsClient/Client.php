@@ -18,6 +18,22 @@ class Client
      */
     public function search($query, $index, $type = '')
     {
-        return true;
+        $url = 'localhost:9200';
+
+        if (strlen($index)) {
+            $url .= '/' .$index;
+        }
+
+        if (strlen($type)) {
+            $url .= '/' .$type;
+        }
+
+        $url .= '/_search';
+
+
+
+        exec('curl --silent "'.$url.'" -d "'.$query.'"', $output, $returnVal);
+
+        return implode(PHP_EOL, $output);
     }
 }

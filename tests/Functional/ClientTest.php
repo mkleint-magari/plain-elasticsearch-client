@@ -19,6 +19,26 @@ class ClientTest extends TestCase
     public function testTrue()
     {
         $client = new Client();
-        static::assertTrue($client->search('', ''));
+        $response = $client->search('', '');
+
+        $expectedElementsInResponse = [
+            '{"took":',
+            '"timed_out":',
+            '"_shards":',
+            '{"total":',
+            '"successful":',
+            '"failed":',
+            '"hits":',
+        ];
+
+        foreach ($expectedElementsInResponse as $element) {
+
+            static::assertContains(
+                $element,
+                $response,
+                'expected element ['.$element.'] not found in response'
+            );
+        }
+
     }
 }
