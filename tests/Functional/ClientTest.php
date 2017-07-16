@@ -135,7 +135,9 @@ class ClientTest extends TestCase
         foreach ($expectedElementsInResponse as $element) {
 
             static::assertContains(
-                $element, $scannedResponse, 'expected element [' . $element . '] not found in response'
+                $element,
+                $scannedResponse,
+                'expected element [' . $element . '] not found in response with scrollId ['.$scrollId.']'
             );
         }
     }

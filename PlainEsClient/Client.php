@@ -109,7 +109,7 @@ JSON;
 
         exec('curl --silent "' . $url . '" -d \'' . $query . '\'', $output, $returnVal);
 
-
+echo 'executing request with data ' . $query . PHP_EOL;
 
         return implode(PHP_EOL, $output);
     }
