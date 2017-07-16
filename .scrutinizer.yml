@@ -1,4 +1,7 @@
 build:
+    environment:
+        php: 5.4
+        elasticsearch: 1
     tests:
         override:
             -
@@ -7,11 +10,6 @@ build:
                     file: my-coverage-file
                     format: php-clover
     nodes:
-        php54_es14:
-            environment:
-                php: 5.4
-                elasticsearch: 1
-
         php55_es14:
             environment:
                 php: 5.5
