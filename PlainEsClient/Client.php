@@ -106,6 +106,41 @@ class Client
     }
 
     /**
+     * @param string $bulk
+     *
+     * @return string
+     */
+    public function bulk(&$bulk)
+    {
+        $url = $this->buildSocket() . '/_bulk';
+
+        $ch         = curl_init();
+
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => $url,
+            CURLOPT_CUSTOMREQUEST  => 'POST',
+            CURLOPT_POSTFIELDS     => $bulk,
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+
+        return curl_exec($ch); //json data
+    }
+
+    /**
+     * @param string $indexName
+     *
+     * @return string
+     */
+    public function refresh($indexName)
+    {
+        $url = $this->buildSocket() . '/' . $indexName . '/_refresh';
+
+        exec('curl --silent -XPOST "' . $url . '"', $output, $returnVal);
+
+        return implode(PHP_EOL, $output);
+    }
+
+    /**
      * @return string
      */
     private function buildSocket()

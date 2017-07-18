@@ -157,7 +157,7 @@ class ClientTest extends TestCase
     {
 
         $elasticSocket = $this->elasticTestHost . ':' . $this->elasticTestPort;
-        exec('curl --silent -XPUT "' . $elasticSocket . '/test-index"');
+        exec('curl --silent -XDELETE "' . $elasticSocket . '/test-index"');
 
         parent::tearDown();
     }
