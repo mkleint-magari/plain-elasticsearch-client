@@ -72,6 +72,16 @@ class BulkIndexerTest extends TestCase
 
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage empty document body is not allowed
+     */
+    public function testAdd_throwsExceptionOnEmptyBody()
+    {
+        $bulkIndexer = new BulkIndexer(10, $this->getClient());
+        $bulkIndexer->add($this->testIndexName, 'my-type', []);
+    }
+
     private function getClient()
     {
         return new Client($this->testHost, $this->testPort);

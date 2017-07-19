@@ -26,7 +26,7 @@
     
     for ($i = 0; $i < $testDocumentCount; $i++) {
     
-        $bulkIndexer->add('my-index', 'my-type', '{"my": "fancy document"}');
+        $bulkIndexer->add('my-index', 'my-type', ['my' => 'fancy-document']);
     }
     
     $bulkIndexer->flush();
