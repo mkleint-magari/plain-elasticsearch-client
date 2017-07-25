@@ -140,6 +140,29 @@ class Client
         return implode(PHP_EOL, $output);
     }
 
+
+    /**
+     * @param string $indexName
+     * @param string $typeName
+     * @param string $query
+     */
+    public function deleteByQuery($indexName, $typeName, $query)
+    {
+        $command = sprintf(
+            'curl --silent -XDELETE "http://%s/%s/%s/_query" -d \'%s\'',
+            $this->buildSocket(),
+            $indexName,
+            $typeName,
+            $query
+        );
+
+        exec(
+            $command,
+            $output,
+            $returnVal
+        );
+    }
+
     /**
      * @return string
      */
@@ -147,4 +170,5 @@ class Client
     {
         return $this->host . ':' . $this->port;
     }
+
 }
