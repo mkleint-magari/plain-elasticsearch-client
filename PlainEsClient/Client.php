@@ -66,6 +66,34 @@ class Client
      *
      * @param string $query
      * @param string $index index- or aliasname
+     * @param string $type  (optional
+     *
+     * @return string
+     */
+    public function count($query, $index, $type = '')
+    {
+        $url = $this->buildSocket();
+
+        if (strlen($index)) {
+            $url .= '/' . $index;
+        }
+
+        if (strlen($type)) {
+            $url .= '/' . $type;
+        }
+
+        $url .= '/_count';
+
+        exec('curl --silent "' . $url . '" -d \'' . $query . '\'', $output, $returnVal);
+
+        return implode(PHP_EOL, $output);
+    }
+
+    /**
+     * returns elasticsearch response as plain string
+     *
+     * @param string $query
+     * @param string $index index- or aliasname
      * @param string $scrollDuration
      * @param string $type  (optional
      *
@@ -114,14 +142,16 @@ class Client
     {
         $url = $this->buildSocket() . '/_bulk';
 
-        $ch         = curl_init();
+        $ch = curl_init();
 
-        curl_setopt_array($ch, [
+        curl_setopt_array(
+            $ch, [
             CURLOPT_URL            => $url,
             CURLOPT_CUSTOMREQUEST  => 'POST',
             CURLOPT_POSTFIELDS     => $bulk,
             CURLOPT_RETURNTRANSFER => true,
-        ]);
+        ]
+        );
 
         return curl_exec($ch); //json data
     }
@@ -140,6 +170,33 @@ class Client
         return implode(PHP_EOL, $output);
     }
 
+    /**
+     * use this to send a customized curl request to an elasticsearch endpoint of your choice.
+     *
+     * @param string $endpoint - the endpoint address relative to the socket
+     * @param string $payload  - payload data that should be submitted as json string
+     * @param string $method   - GET, POST, PUT or DELETE
+     *
+     * @return string
+     */
+    public function curl($endpoint, $payload, $method)
+    {
+        $url = $this->buildSocket() . $endpoint;
+
+        $ch = curl_init();
+
+        curl_setopt_array(
+            $ch,
+            [
+                CURLOPT_URL            => $url,
+                CURLOPT_CUSTOMREQUEST  => $method,
+                CURLOPT_POSTFIELDS     => $payload,
+                CURLOPT_RETURNTRANSFER => true,
+            ]
+        );
+
+        return curl_exec($ch); //json data
+    }
 
     /**
      * @param string $indexName
@@ -149,17 +206,11 @@ class Client
     public function deleteByQuery($indexName, $typeName, $query)
     {
         $command = sprintf(
-            'curl --silent -XDELETE "http://%s/%s/%s/_query" -d \'%s\'',
-            $this->buildSocket(),
-            $indexName,
-            $typeName,
-            $query
+            'curl --silent -XDELETE "http://%s/%s/%s/_query" -d \'%s\'', $this->buildSocket(), $indexName, $typeName, $query
         );
 
         exec(
-            $command,
-            $output,
-            $returnVal
+            $command, $output, $returnVal
         );
     }
 
