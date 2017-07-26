@@ -250,6 +250,8 @@ class Client
      * @param string $indexName
      * @param string $typeName
      * @param string $query
+     *
+     * @return mixed
      */
     public function deleteByQuery($indexName, $typeName, $query)
     {
@@ -269,7 +271,7 @@ class Client
             ]
         );
 
-        curl_exec($this->curlChannel); //json data
+        return curl_exec($this->curlChannel); //json data
     }
 
     /**
