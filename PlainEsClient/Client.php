@@ -22,6 +22,11 @@ class Client
     private $port = 9200;
 
     /**
+     * @var resource
+     */
+    private $curlChannel;
+
+    /**
      * Client constructor.
      *
      * @param string $host
@@ -31,6 +36,15 @@ class Client
     {
         $this->host = $host;
         $this->port = $port;
+
+        $this->curlChannel = curl_init();
+    }
+
+    function __destruct()
+    {
+        if (is_resource($this->curlChannel)) {
+            curl_close($this->curlChannel);
+        }
     }
 
     /**
@@ -56,9 +70,16 @@ class Client
 
         $url .= '/_search';
 
-        exec('curl --silent "' . $url . '" -d \'' . $query . '\'', $output, $returnVal);
+        curl_setopt_array(
+            $this->curlChannel, [
+                CURLOPT_URL            => $url,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_POSTFIELDS     => $query,
+                CURLOPT_RETURNTRANSFER => true,
+            ]
+        );
 
-        return implode(PHP_EOL, $output);
+        return curl_exec($this->curlChannel); //json data
     }
 
     /**
@@ -84,9 +105,16 @@ class Client
 
         $url .= '/_count';
 
-        exec('curl --silent "' . $url . '" -d \'' . $query . '\'', $output, $returnVal);
+        curl_setopt_array(
+            $this->curlChannel, [
+                CURLOPT_URL            => $url,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_POSTFIELDS     => $query,
+                CURLOPT_RETURNTRANSFER => true,
+            ]
+        );
 
-        return implode(PHP_EOL, $output);
+        return curl_exec($this->curlChannel); //json data
     }
 
     /**
@@ -113,9 +141,16 @@ class Client
 
         $url .= '/_search?scroll=' . $scrollDuration;
 
-        exec('curl --silent "' . $url . '" -d \'' . $query . '\'', $output, $returnVal);
+        curl_setopt_array(
+            $this->curlChannel, [
+                CURLOPT_URL            => $url,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_POSTFIELDS     => $query,
+                CURLOPT_RETURNTRANSFER => true,
+            ]
+        );
 
-        return implode(PHP_EOL, $output);
+        return curl_exec($this->curlChannel); //json data
     }
 
     /**
@@ -128,9 +163,16 @@ class Client
     {
         $url = $this->buildSocket() . '/_search/scroll?scroll=' . $scrollDuration;
 
-        exec('curl --silent "' . $url . '" -d \'' . $scrollId . '\'', $output, $returnVal);
+        curl_setopt_array(
+            $this->curlChannel, [
+                CURLOPT_URL            => $url,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_POSTFIELDS     => $scrollId,
+                CURLOPT_RETURNTRANSFER => true,
+            ]
+        );
 
-        return implode(PHP_EOL, $output);
+        return curl_exec($this->curlChannel); //json data
     }
 
     /**
@@ -145,12 +187,12 @@ class Client
         $ch = curl_init();
 
         curl_setopt_array(
-            $ch, [
-            CURLOPT_URL            => $url,
-            CURLOPT_CUSTOMREQUEST  => 'POST',
-            CURLOPT_POSTFIELDS     => $bulk,
-            CURLOPT_RETURNTRANSFER => true,
-        ]
+                $ch, [
+                CURLOPT_URL            => $url,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_POSTFIELDS     => $bulk,
+                CURLOPT_RETURNTRANSFER => true,
+            ]
         );
 
         return curl_exec($ch); //json data
@@ -165,9 +207,15 @@ class Client
     {
         $url = $this->buildSocket() . '/' . $indexName . '/_refresh';
 
-        exec('curl --silent -XPOST "' . $url . '"', $output, $returnVal);
+        curl_setopt_array(
+            $this->curlChannel, [
+                CURLOPT_URL            => $url,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_RETURNTRANSFER => true,
+            ]
+        );
 
-        return implode(PHP_EOL, $output);
+        return curl_exec($this->curlChannel); //json data
     }
 
     /**
@@ -205,13 +253,23 @@ class Client
      */
     public function deleteByQuery($indexName, $typeName, $query)
     {
-        $command = sprintf(
-            'curl --silent -XDELETE "http://%s/%s/%s/_query" -d \'%s\'', $this->buildSocket(), $indexName, $typeName, $query
+        $url = sprintf(
+            'http://%s/%s/%s/_query"',
+            $this->buildSocket(),
+            $indexName,
+            $typeName
         );
 
-        exec(
-            $command, $output, $returnVal
+        curl_setopt_array(
+            $this->curlChannel, [
+                CURLOPT_URL            => $url,
+                CURLOPT_CUSTOMREQUEST  => 'DELETE',
+                CURLOPT_POSTFIELDS     => $query,
+                CURLOPT_RETURNTRANSFER => true,
+            ]
         );
+
+        curl_exec($this->curlChannel); //json data
     }
 
     /**
