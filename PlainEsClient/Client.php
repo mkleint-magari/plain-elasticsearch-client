@@ -256,7 +256,7 @@ class Client
     public function deleteByQuery($indexName, $typeName, $query)
     {
         $url = sprintf(
-            'http://%s/%s/%s/_query"',
+            'http://%s/%s/%s/_query',
             $this->buildSocket(),
             $indexName,
             $typeName
